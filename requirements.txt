@@ -1,0 +1,6 @@
+selenium==2.46.0
+dropbox
+pyopenssl
+ndg-httpsclient
+pyasn1
+flake8

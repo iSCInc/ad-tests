@@ -102,12 +102,12 @@ class TestAmazon(unittest.TestCase):
         out = check_output(['phantomjs', 'phantomjs/get_requested_urls.js', url])
         return True if requested_url in str(out) else False
 
-    def wait_presence_of_element_located(self, css_selector):
+    def lazy_get_element(self, css_selector):
         return WebDriverWait(self.driver, self.timeout_seconds).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, css_selector)))
 
     def get_amazon_iframe(self, amazon_slot_css):
-        amazon_slot = self.wait_presence_of_element_located(self.amazon_slot_css)
+        amazon_slot = self.lazy_get_element(self.amazon_slot_css)
         return amazon_slot.find_element_by_css_selector('div[id*=__container__] > iframe')
 
 

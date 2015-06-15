@@ -52,7 +52,7 @@ class TestAmazon(unittest.TestCase):
 
     def setUp(self):
         self.driver = webdriver.Firefox()
-        self.driver.maximize_window()
+        self.driver.set_window_size(1920, 1080)
 
     def tearDown(self):
         if sys.exc_info()[0]:

@@ -1,4 +1,4 @@
-"""Ad Eng automation tests"""
+"""Ad engineering automated tests"""
 
 import unittest
 import logging
@@ -21,13 +21,13 @@ class TestAmazon(unittest.TestCase):
         """Test integration with Amazon provider"""
         self.driver.get(self.url)
         self.assertTrue(self.is_amazon_script_included())
-        self.assertTrue(self.is_amazon_request_issued(False))
+        self.assertTrue(self.is_amazon_request_issued(amzn_debug=False))
 
     def test_amazon_ads_success(self):
         """Test returned ads from Amazon provider"""
         self.driver.get(self.url_debug)
         self.assertTrue(self.is_amazon_script_included())
-        self.assertTrue(self.is_amazon_request_issued(True))
+        self.assertTrue(self.is_amazon_request_issued())
         self.assertTrue(self.is_amazon_gpt_params_present())
         self.assertTrue(self.is_amazon_ad_present())
 
@@ -72,10 +72,10 @@ class TestAmazon(unittest.TestCase):
     def is_amazon_script_included(self):
         return self.is_element_present_by_css_selector(self.amazon_script_css)
 
-    def is_amazon_request_issued(self, debug):
-        url = self.url_debug if debug else self.url
+    def is_amazon_request_issued(self, amzn_debug=True):
+        url = self.url_debug if amzn_debug else self.url
         out = check_output(['phantomjs', 'phantomjs/get_requested_urls.js', url])
-        return True if self.amazon_script_url in str(out) else False
+        return self.amazon_script_url in str(out)
 
     def is_amazon_gpt_params_present(self):
         amazon_slot = self.driver.find_element_by_css_selector(self.amazon_slot_css)

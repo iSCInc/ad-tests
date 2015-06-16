@@ -1,4 +1,4 @@
-# Ad Eng automation tests
+# Ad engineering automated tests
 Requirements:
   - python 2.7
   - phantomjs

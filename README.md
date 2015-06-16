@@ -1,8 +1,8 @@
 # Ad engineering automated tests
 Requirements:
   - python 2.7
-  - phantomjs
-  - FF
+  - phantomjs (TODO: add the specific version number)
+  - Firefox (TODO: add the specific version number)
 
 Workflow:
   1.  `git clone git@github.com:Wikia/ad-tests.git && cd ad-tests` to clone the repo and go to the tests folder

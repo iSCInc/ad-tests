@@ -63,7 +63,7 @@ class TestAmazon(unittest.TestCase):
             with open(html_file_path, 'w') as f:
                 f.write(self.driver.page_source.encode('utf-8'))
             if self.send_dropbox:
-                key = 'TbN0tgnVu2oAAAAAAAAAD90u6_0IFv9kNEXnpD9c2inLh1Qwi-68-TyYMQsL6j48'
+                key = 'a73pG4HK-bAAAAAAAAAAB6t09C8TFfiyditelMncYHd0z6yZq_dKfKDGt0ZisneD'
                 self.client = dropbox.client.DropboxClient(key)
                 self.client.put_file(img_file_path, open(img_file_path))
                 self.client.put_file(html_file_path, open(html_file_path))

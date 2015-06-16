@@ -12,4 +12,4 @@ Workflow:
 Find screenshots and raw html files in `logs` folder on test failure.  
 Find logs in Dropbox folder if you run the tests with `send-dropbox` argument:  
 `python ad_tests.py send-dropbox`  
-Dropbox folder: https://www.dropbox.com/sh/6ietqx6er35ag23/AAAyhzHfbUh8SRZ5V-EERtmha?dl=0
+Dropbox folder: https://www.dropbox.com/sh/ur8h7vocj5idcc3/AAAz5vMIOirBmeHeCyH5LIY0a?dl=0

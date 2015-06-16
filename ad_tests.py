@@ -80,10 +80,7 @@ class TestAmazon(unittest.TestCase):
     def is_amazon_gpt_params_present(self):
         amazon_slot = self.driver.find_element_by_css_selector(self.amazon_slot_css)
         data_gpt_slot_params = amazon_slot.get_attribute('data-gpt-slot-params')
-        if self.amazon_gpt_params_pattern in data_gpt_slot_params:
-            return True
-        else:
-            return False
+        return self.amazon_gpt_params_pattern in data_gpt_slot_params
 
     def is_amazon_ad_present(self):
         amazon_iframe = self.get_amazon_iframe(self.amazon_slot_css)

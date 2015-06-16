@@ -1,7 +1,6 @@
 """Ad engineering automated tests"""
 
 import unittest
-import logging
 import sys
 import os
 import shutil
@@ -31,7 +30,6 @@ class TestAmazon(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.logger = logging.getLogger('logger')
         cls.url = 'http://adtest.wikia.com/wiki/SyntheticTests/Amazon'
         cls.url_debug = cls.url + '?amzn_debug_mode=1'
         cls.amazon_script_url = 'amazon-adsystem.com/e/dtb'
@@ -99,8 +97,6 @@ class TestAmazon(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    logging.basicConfig()
-    logging.getLogger('logger').setLevel(logging.DEBUG)
     if len(sys.argv) > 1 and sys.argv.pop() == 'send-dropbox':
         TestAmazon.send_dropbox = True
     unittest.main()

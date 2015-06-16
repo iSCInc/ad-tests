@@ -1,4 +1,4 @@
-"""Ad Eng selenium tests"""
+"""Ad engineering automated tests"""
 
 import unittest
 import logging
@@ -16,6 +16,20 @@ from subprocess import check_output
 
 class TestAmazon(unittest.TestCase):
     """Test ads from Amazon provider"""
+
+    def test_amazon_integration(self):
+        """Test integration with Amazon provider"""
+        self.driver.get(self.url)
+        self.assertTrue(self.is_amazon_script_included())
+        self.assertTrue(self.is_amazon_request_issued(amzn_debug=False))
+
+    def test_amazon_ads_success(self):
+        """Test returned ads from Amazon provider"""
+        self.driver.get(self.url_debug)
+        self.assertTrue(self.is_amazon_script_included())
+        self.assertTrue(self.is_amazon_request_issued())
+        self.assertTrue(self.is_amazon_gpt_params_present())
+        self.assertTrue(self.is_amazon_ad_present())
 
     send_dropbox = False
 
@@ -38,7 +52,7 @@ class TestAmazon(unittest.TestCase):
 
     def setUp(self):
         self.driver = webdriver.Firefox()
-        self.driver.maximize_window()
+        self.driver.set_window_size(1920, 1080)
 
     def tearDown(self):
         if sys.exc_info()[0]:
@@ -55,28 +69,15 @@ class TestAmazon(unittest.TestCase):
                 self.client.put_file(html_file_path, open(html_file_path))
         self.driver.quit()
 
-    def test_amazon_integration(self):
-        """Test integration with Amazon provider"""
-        self.driver.get(self.url)
-        self.assertTrue(self.check_amazon_script_included())
-        self.assertTrue(self.check_amazon_request_issued(False))
+    def is_amazon_script_included(self):
+        return self.is_element_present_by_css_selector(self.amazon_script_css)
 
-    def test_amazon_ads_success(self):
-        """Test returned ads from Amazon provider"""
-        self.driver.get(self.url_debug)
-        self.assertTrue(self.check_amazon_script_included())
-        self.assertTrue(self.check_amazon_request_issued(True))
-        self.assertTrue(self.check_amazon_gpt_params())
-        self.assertTrue(self.check_amazon_ad_present())
+    def is_amazon_request_issued(self, amzn_debug=True):
+        url = self.url_debug if amzn_debug else self.url
+        out = check_output(['phantomjs', 'phantomjs/get_requested_urls.js', url])
+        return self.amazon_script_url in str(out)
 
-    def check_amazon_script_included(self):
-        return self.check_element_by_css_selector(self.amazon_script_css)
-
-    def check_amazon_request_issued(self, debug):
-        url = self.url_debug if debug else self.url
-        return self.check_request_issued(url, self.amazon_script_url)
-
-    def check_amazon_gpt_params(self):
+    def is_amazon_gpt_params_present(self):
         amazon_slot = self.driver.find_element_by_css_selector(self.amazon_slot_css)
         data_gpt_slot_params = amazon_slot.get_attribute('data-gpt-slot-params')
         if self.amazon_gpt_params_pattern in data_gpt_slot_params:
@@ -84,31 +85,24 @@ class TestAmazon(unittest.TestCase):
         else:
             return False
 
-    def check_amazon_ad_present(self):
+    def is_amazon_ad_present(self):
         amazon_iframe = self.get_amazon_iframe(self.amazon_slot_css)
         self.driver.switch_to_frame(amazon_iframe)
-        is_amazon_ad_present = self.check_element_by_css_selector(self.amazon_iframe_css)
+        is_amazon_ad_present = self.is_element_present_by_css_selector(self.amazon_iframe_css)
         self.driver.switch_to_default_content()
         return is_amazon_ad_present
 
-    def check_element_by_css_selector(self, css_selector):
+    def get_amazon_iframe(self, amazon_slot_css):
+        amazon_slot = WebDriverWait(self.driver, self.timeout_seconds).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, amazon_slot_css)))
+        return amazon_slot.find_element_by_css_selector('div[id*=__container__] > iframe')
+
+    def is_element_present_by_css_selector(self, css_selector):
         try:
             self.driver.find_element_by_css_selector(css_selector)
         except NoSuchElementException:
             return False
         return True
-
-    def check_request_issued(self, url, requested_url):
-        out = check_output(['phantomjs', 'phantomjs/get_requested_urls.js', url])
-        return True if requested_url in str(out) else False
-
-    def wait_presence_of_element_located(self, css_selector):
-        return WebDriverWait(self.driver, self.timeout_seconds).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, css_selector)))
-
-    def get_amazon_iframe(self, amazon_slot_css):
-        amazon_slot = self.wait_presence_of_element_located(self.amazon_slot_css)
-        return amazon_slot.find_element_by_css_selector('div[id*=__container__] > iframe')
 
 
 if __name__ == '__main__':

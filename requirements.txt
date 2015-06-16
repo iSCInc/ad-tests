@@ -3,3 +3,4 @@ dropbox
 pyopenssl
 ndg-httpsclient
 pyasn1
+flake8

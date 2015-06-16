@@ -16,6 +16,9 @@ from subprocess import check_output
 
 class TestAmazon(unittest.TestCase):
     """Test ads from Amazon provider"""
+
+    send_dropbox = False
+
     @classmethod
     def setUpClass(self):
         self.logger = logging.getLogger('logger')
@@ -39,16 +42,17 @@ class TestAmazon(unittest.TestCase):
 
     def tearDown(self):
         if sys.exc_info()[0]:
-            key = 'TbN0tgnVu2oAAAAAAAAAD90u6_0IFv9kNEXnpD9c2inLh1Qwi-68-TyYMQsL6j48'
-            self.client = dropbox.client.DropboxClient(key)
             file_path = os.path.join(self.log_folder, self._testMethodName)
             img_file_path = file_path + '.png'
             html_file_path = file_path + '.html'
             self.driver.get_screenshot_as_file(img_file_path)
-            self.client.put_file(img_file_path, open(img_file_path))
             with open(html_file_path, 'w') as f:
                 f.write(self.driver.page_source.encode('utf-8'))
-            self.client.put_file(html_file_path, open(html_file_path))
+            if self.send_dropbox:
+                key = 'TbN0tgnVu2oAAAAAAAAAD90u6_0IFv9kNEXnpD9c2inLh1Qwi-68-TyYMQsL6j48'
+                self.client = dropbox.client.DropboxClient(key)
+                self.client.put_file(img_file_path, open(img_file_path))
+                self.client.put_file(html_file_path, open(html_file_path))
         self.driver.quit()
 
     def test_amazon_integration(self):
@@ -110,4 +114,6 @@ class TestAmazon(unittest.TestCase):
 if __name__ == '__main__':
     logging.basicConfig()
     logging.getLogger('logger').setLevel(logging.DEBUG)
+    if len(sys.argv) > 1 and sys.argv.pop() == 'send-dropbox':
+        TestAmazon.send_dropbox = True
     unittest.main()

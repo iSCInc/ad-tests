@@ -71,7 +71,7 @@ class TestAmazon(unittest.TestCase):
     def is_amazon_request_issued(self, amzn_debug=True):
         url = self.url_debug if amzn_debug else self.url
         out = check_output(['phantomjs', 'phantomjs/get_requested_urls.js', url])
-        return self.amazon_script_url in str(out)
+        return self.amazon_script_url in out
 
     def is_amazon_gpt_params_present(self):
         amazon_slot = self.driver.find_element_by_css_selector(self.amazon_slot_css)

@@ -27,7 +27,7 @@ class TestAmazon(unittest.TestCase):
     def test_amazon_request_issued(self):
         """Test amazon request is issued"""
         out = check_output(['phantomjs', 'phantomjs/get_requested_urls.js', self.url])
-        return self.amazon_script_url in out
+        self.assertTrue(self.amazon_script_url in out)
 
     send_dropbox = False
 

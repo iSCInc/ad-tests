@@ -6,11 +6,7 @@ import sys
 import os
 import shutil
 import dropbox
-from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from shortcuts import wd, By, EC, NoSuchElementException, Wait
 from subprocess import check_output
 
 
@@ -34,24 +30,24 @@ class TestAmazon(unittest.TestCase):
     send_dropbox = False
 
     @classmethod
-    def setUpClass(self):
-        self.logger = logging.getLogger('logger')
-        self.url = 'http://adtest.wikia.com/wiki/SyntheticTests/Amazon'
-        self.url_debug = self.url + '?amzn_debug_mode=1'
-        self.amazon_script_url = 'amazon-adsystem.com/e/dtb'
-        self.amazon_script_css = 'script[src*="' + self.amazon_script_url + '"]'
-        self.amazon_iframe_css = 'iframe[src*="' + self.amazon_script_url + '"]'
-        self.amazon_slot_css = 'div[id*=_gpt][data-gpt-slot-params*=amznslots]:not(.hidden)'
-        self.amazon_gpt_params_pattern = '"amznslots":["a'
-        self.timeout_seconds = 30
-        self.log_folder = 'logs'
+    def setUpClass(cls):
+        cls.logger = logging.getLogger('logger')
+        cls.url = 'http://adtest.wikia.com/wiki/SyntheticTests/Amazon'
+        cls.url_debug = cls.url + '?amzn_debug_mode=1'
+        cls.amazon_script_url = 'amazon-adsystem.com/e/dtb'
+        cls.amazon_script_css = 'script[src*="' + cls.amazon_script_url + '"]'
+        cls.amazon_iframe_css = 'iframe[src*="' + cls.amazon_script_url + '"]'
+        cls.amazon_slot_css = 'div[id*=_gpt][data-gpt-slot-params*=amznslots]:not(.hidden)'
+        cls.amazon_gpt_params_pattern = '"amznslots":["a'
+        cls.timeout_seconds = 30
+        cls.log_folder = 'logs'
         # clear logs folder
-        if os.path.exists(self.log_folder):
-            shutil.rmtree(self.log_folder)
-        os.makedirs(self.log_folder)
+        if os.path.exists(cls.log_folder):
+            shutil.rmtree(cls.log_folder)
+        os.makedirs(cls.log_folder)
 
     def setUp(self):
-        self.driver = webdriver.Firefox()
+        self.driver = wd.Firefox()
         self.driver.set_window_size(1920, 1080)
 
     def tearDown(self):
@@ -90,7 +86,7 @@ class TestAmazon(unittest.TestCase):
         return is_amazon_ad_present
 
     def get_amazon_iframe(self, amazon_slot_css):
-        amazon_slot = WebDriverWait(self.driver, self.timeout_seconds).until(
+        amazon_slot = Wait(self.driver, self.timeout_seconds).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, amazon_slot_css)))
         return amazon_slot.find_element_by_css_selector('div[id*=__container__] > iframe')
 

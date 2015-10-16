@@ -4,8 +4,8 @@
 
 Requirements:
   - python 2.7
-  - phantomjs (TODO: add the specific version number)
-  - Firefox (TODO: add the specific version number)
+  - phantomjs
+  - Firefox
 
 Workflow:
   1.  `git clone git@github.com:Wikia/ad-tests.git && cd ad-tests` to clone the repo and go to the tests folder
